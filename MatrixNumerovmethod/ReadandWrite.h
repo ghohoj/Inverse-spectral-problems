@@ -2,8 +2,8 @@
  * @Description: 写入文件
  * @Author: catgod
  * @Date: 2023-09-06 09:56:59
- * @LastEditTime: 2023-09-06 11:12:45
- * @FilePath: /Inverse spectral problems/gengerate/ReadandWrite.h
+ * @LastEditTime: 2023-09-07 14:25:55
+ * @FilePath: /Inverse spectral problems/MatrixNumerovmethod/ReadandWrite.h
  */
 
 #pragma once
@@ -19,7 +19,7 @@ void write(const vec& q,vector<Real>& lam,string address="../data/data.json")
 	f<<"{";
     f<<" \"q\":[ ";
     for(int i=0;i<precise;i++){
-        f<<setprecision(10)<<q(i)<<",";
+        f<<setprecision(10)<<q.coeff(i)<<",";
     }
     f<<"],";
     f<<" \"lambda\":[ ";

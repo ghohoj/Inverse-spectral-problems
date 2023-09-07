@@ -24,20 +24,21 @@
  *            佛祖保佑       永不宕机     永无BUG
  */
 
-#include"gengerate/Numerov.h"
-#include"gengerate/rV.h"
-#include"gengerate/ReadandWrite.h"
-using namespace std;
-using namespace Eigen;
+#include"MatrixNumerovmethod/def.h"
+#include"MatrixNumerovmethod/Numerov.h"
+#include"MatrixNumerovmethod/rV.h"
+#include"MatrixNumerovmethod/ReadandWrite.h"
+
+
 
 void test1(){
     auto v=testV();
     vector<Real> eigval;
     MatrixNumerov(v,eigval,4);
-    cout<<endl;
+    for(auto i:eigval){
+        cout<<i<<endl;
+    }
 }
-
-
 
 int main()
 {
