@@ -2,7 +2,7 @@
 Description: 论文Numerical algorithms for inverse Sturm-Liouville problems的复现。
 Author: catgod
 Date: 2023-09-05 21:44:27
-LastEditTime: 2023-09-09 22:06:28
+LastEditTime: 2023-09-09 22:13:10
 FilePath: /Inverse spectral problems/inverse/InverseSLProblem.py
 '''
 from typing import List, Dict
@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 torch.set_printoptions(precision=8)
-N=1
+N=5
 
 class PPoly:
     def __init__(self,s:int,K1:int) -> None:

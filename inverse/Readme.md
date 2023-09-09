@@ -9,7 +9,7 @@ $$
 
 # 代码思路
 
-无，采用Numerical algorithms for inverse Sturm-Liouville problems复现即可。
+采用Numerical algorithms for inverse Sturm-Liouville problems复现即可。
 
 # 测试
 
@@ -28,6 +28,16 @@ $$
     self.TrainPower[i]=self.TrainPower[i]+torch.mm(self.TrainPower[1],self.TrainPower[i-1])
     ```
 
+2.论文的M矩阵是从1开始记数的，不是0
+
 ## 成功测试
 
-假定特征值为$(n\pi)^2$，众所周知q=0，测试运行test.py/test1()，成功
+假定特征值为$(n\pi)^2$，众所周知q=0，测试运行test.py/test1()，当N=1的时候，得到下图（蓝色线与橙色线几乎重叠）拟合结果$10^{-7}$
+
+![image-20230909221045845](./assets/image-20230909221045845.png)
+
+然而，可能会注意到N=5时，拟合结果$10^{-5}$
+
+![image-20230909221415864](./assets/image-20230909221415864.png)
+
+个人认为，有可能是因为这两个势函数本身产生的特征值太接近了，才导致出现这样的结果。
