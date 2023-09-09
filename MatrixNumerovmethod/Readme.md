@@ -6,7 +6,9 @@ $$
 $$
 中的特征值l
 
-# 更正声明
+# 论文更正声明
+
+基本上采用Numerov method for solving Schrödinger’s equation的方法。
 
 Matrix Numerov method for solving Schrodinger’s equation文章中$B^{-1}$计算量非常夸张，文章中，对一个300*300的矩阵的逆，我无法理解为什么可以他在0.1s内算出来。
 

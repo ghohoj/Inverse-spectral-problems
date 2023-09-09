@@ -40,7 +40,20 @@ void test1(){
     }
 }
 
+void test2(){
+    vec q(precise);
+    vector<Real> lam;
+
+    for(int i=0;i<precise;i++){
+        q.insert(i)=0;
+    }
+    for(int i=0;i<20;i++){
+        lam.push_back((i+1)*(i+1)*M_PI*M_PI);
+    }
+    write(q,lam);
+} 
+
 int main()
 {
-    test1();
+    test2();
 }

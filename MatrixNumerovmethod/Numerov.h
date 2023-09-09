@@ -1,9 +1,9 @@
 /*
- * @Description: 实现对 y''+q(x)y=\lambda y y(0)=0 y(1)=0,
+ * @Description: 实现对 -y''+q(x)y=\lambda y y(0)=0 y(1)=0,
     参考论文:Matrix Numerov method for solving Schrödinger’s equation
  * @Author: catgod
  * @Date: 2023-09-02 11:39:30
- * @LastEditTime: 2023-09-07 15:55:05
+ * @LastEditTime: 2023-09-09 17:08:03
  * @FilePath: /Inverse spectral problems/MatrixNumerovmethod/Numerov.h
  */
 
