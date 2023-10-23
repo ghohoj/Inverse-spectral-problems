@@ -2,7 +2,7 @@
 Description: 论文Numerical algorithms for inverse Sturm-Liouville problems的复现。
 Author: catgod
 Date: 2023-09-05 21:44:27
-LastEditTime: 2023-09-09 22:13:10
+LastEditTime: 2023-10-18 16:59:26
 FilePath: /Inverse spectral problems/inverse/InverseSLProblem.py
 '''
 from typing import List, Dict
@@ -14,8 +14,9 @@ import matplotlib.pyplot as plt
 
 
 torch.set_printoptions(precision=8)
-N=5
-
+N=2
+K1=10# 后面重新定义值
+S=11
 class PPoly:
     def __init__(self,s:int,K1:int) -> None:
         """论文Numerical algorithms for inverse Sturm-Liouville problems(2.5)(2.6)公式,主要功能为实现(2.7)两边的计算
@@ -98,7 +99,7 @@ class PPoly:
         for j in range(self.s):
             for k in range(len(self.TrainPower)):
                 tmpresult[j]=tmpresult[j]+self.TrainPower[k]*self.PPar[j][k]
-            result[j]=result[j]+torch.trace(tmpresult[j])
+            result[j]=torch.trace(tmpresult[j])
         return result
 
 
@@ -129,7 +130,7 @@ def MIntegral(i:int,j:int,k:int)->float:
     return result
 
 
-def read(address:str="data.json")->Dict[str,List[float]]:
+def read(address:str="testdata.json")->Dict[str,List[float]]:
     """读取json文件
 
     Args:
@@ -143,7 +144,7 @@ def read(address:str="data.json")->Dict[str,List[float]]:
     return fcc_data
 
 
-def forward(q:torch.Tensor,target:torch.Tensor,P:PPoly)->torch.float:
+def forward(q:torch.Tensor,target:torch.Tensor,P:PPoly)->torch.Tensor:
     """计算优化的目标
 
     Args:
@@ -157,7 +158,7 @@ def forward(q:torch.Tensor,target:torch.Tensor,P:PPoly)->torch.float:
 
     D=torch.zeros((P.K1,P.K1))
     for i in range(P.K1):
-        D[i][i]=D[i][i]+((i+1)*np.pi)**2
+        D[i][i]=((i+1)*np.pi)**2
     M=torch.zeros((P.K1,P.K1))
     for i in range(P.K1):
         for j in range(P.K1):
@@ -167,6 +168,7 @@ def forward(q:torch.Tensor,target:torch.Tensor,P:PPoly)->torch.float:
     # 在P多项式中计算trace的结果
     P.getTrainPower(R)
     tmp=P.polyMAT()
+    # print(tmp-target)
     return (tmp-target).norm()
 
 
@@ -211,54 +213,76 @@ def train(x:torch.Tensor,q_num:int=N):
     Returns:
         _type_: q(x)=sum_{k=1} q_k cos(2(k-1)pi x)中的q_k
     """
-    q=torch.ones((q_num))*(1)
-    P=PPoly(len(x),len(x))
+    K1=len(x)
+    q=torch.zeros((q_num))
+    
+    q=torch.Tensor([0,4])
+
+    
+    P=PPoly(S,K1)
     target=gettarget(x,P)
-    #quasi-newton,调用求解器
-    # q_result = minimize(lambda q:forward(q,target,P), q, method='l-bfgs',
-    #                     options=dict(line_search='strong-wolfe'), tol=1e-6,
-    #                     max_iter=50,disp=2)
     q.requires_grad = True
-    optimizer = torch.optim.SGD([q], lr=1)
-    for epoch in range(200):
-        P=PPoly(len(x),len(x))
-        loss=forward(q,target,P)
+    #quasi-newton,调用求解器
+    # q_res = minimize(lambda q:forward(q,target,P), q, method='l-bfgs')
+    print(forward(q,target,P))
+
+    # grads=10
+    # pre=10
+    grads=0.1
+    optimizer = torch.optim.LBFGS([q[1]], lr=grads, max_iter=20)
+    # for epoch in range(200):
+    #     P=PPoly(S,K1)
+    #     loss=forward(q,target,P)
+    #     loss.backward()
+    #     optimizer.step()
+    #     optimizer.zero_grad()
+    #     print("第"+str(epoch)+"轮迭代：")
+    #     print("梯度:"+str(grads))
+    #     print("值",q.detach().numpy())
+    #     print("损失",loss.detach().numpy())
+    #     tmppre=loss.detach().numpy()
+    #     #变梯度下降
+        
+    #     if(pre<=tmppre):
+    #         grads=grads/2
+    #         pre=tmppre
+    #         for ps in optimizer.param_groups:
+    #             ps["lr"]=grads
+    #     pre=tmppre
+    #     if(grads<0.00001):
+    #         break
+    EPOCH=200
+    def closure():
+        P=PPoly(S,K1)
+        loss = forward(q,target,P)
         loss.backward()
-        optimizer.step()
+        return loss
+    for epoch in range(EPOCH):
+        loss=optimizer.step(closure=closure)
         optimizer.zero_grad()
         print("第"+str(epoch)+"轮迭代：")
-        print(q)
-        print(loss)
-        #变梯度下降
-        if(epoch==30):
-            for ps in optimizer.param_groups:
-                ps["lr"]=0.5
-        if(epoch==60):
-            for ps in optimizer.param_groups:
-                ps["lr"]=0.1
-        if(epoch==90):
-            for ps in optimizer.param_groups:
-                ps["lr"]=0.05
-        if(epoch==120):
-            for ps in optimizer.param_groups:
-                ps["lr"]=0.01
-        if(epoch==150):
-            for ps in optimizer.param_groups:
-                ps["lr"]=0.005
-    return q
+        print("梯度:"+str(grads))
+        print("值",q.detach().numpy())
+        print("损失",loss.detach().numpy())
 
 
+    
+    q_res=q
+    return q_res
+
+def plot():
+    pass
 
 
 def main():
     """主函数
     """
-    data=read()
+    data=read("testdata.json")
     q_result=train(torch.tensor(data["lambda"]))
     plt.plot(qktoqx(q_result,3000))
-    plt.plot(np.array([0]*3000))
-    plt.ylim([-1,5])
+    plt.plot(np.array(data['q']))
+    
     plt.show()
     plt.pause(0)
     
-main()
+# main()

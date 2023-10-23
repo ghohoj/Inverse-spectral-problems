@@ -2,7 +2,7 @@
  * @Description: 一些变量的定义
  * @Author: catgod
  * @Date: 2023-09-05 21:34:45
- * @LastEditTime: 2023-09-07 15:40:57
+ * @LastEditTime: 2023-09-15 16:35:49
  * @FilePath: /Inverse spectral problems/MatrixNumerovmethod/def.h
  */
 #pragma once
@@ -29,7 +29,7 @@ typedef SparseVector<Real> vec;
 /// @brief 返回0-1随机数，固定随机种子
 /// @return 随机数
 double myrand(){
-    int x=rand()%100000;
+    int x=(rand()%100000);
     return x*1.0/100000;
 }
 

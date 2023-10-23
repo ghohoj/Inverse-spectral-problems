@@ -3,7 +3,7 @@
     参考论文:Matrix Numerov method for solving Schrödinger’s equation
  * @Author: catgod
  * @Date: 2023-09-02 11:39:30
- * @LastEditTime: 2023-09-09 17:08:03
+ * @LastEditTime: 2023-09-15 16:43:03
  * @FilePath: /Inverse spectral problems/MatrixNumerovmethod/Numerov.h
  */
 
@@ -31,6 +31,7 @@ void InversePowerMethod(const mat& M,int evalnum,vector<Real>& eigval){
     Real lambda;
     mat tmpmat(precise,precise);
     mat tmpmat2(precise,precise);
+    cout<<"迭代:";
     while (i<evalnum)
     {
         u=randomvec();
@@ -67,7 +68,7 @@ void InversePowerMethod(const mat& M,int evalnum,vector<Real>& eigval){
             u=u/u.norm();
             cyctimes++;
         }
-        cout<<"迭代:"<<cyctimes<<endl;
+        cout<<"#";
         tmp=solver.solve(u);
         lambda=u.norm()/tmp.norm();
         eigvector.push_back(u);

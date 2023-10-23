@@ -1,4 +1,11 @@
 /*
+ * @Description: 请加入备注来说明这个文件的意义
+ * @Author: catgod
+ * @Date: 2023-10-20 18:09:39
+ * @LastEditTime: 2023-10-21 21:05:02
+ * @FilePath: /Inverse spectral problems/test.cpp
+ */
+/*
  *                        _oo0oo_
  *                       o8888888o
  *                       88" . "88
@@ -32,28 +39,120 @@
 
 
 void test1(){
-    auto v=testV();
-    vector<Real> eigval;
-    MatrixNumerov(v,eigval,4);
-    for(auto i:eigval){
-        cout<<i<<endl;
+    vector<vector<Real>> qs;
+    vector<vector<Real>> lams;
+    for(int j=0;j<10;j++){
+        vector<Real> v=ployV();
+        vector<Real> eigval;
+        MatrixNumerov(v,eigval,20);
+        qs.push_back(v);
+        lams.push_back(eigval);
+
+        cout<<endl;
+        cout<<"第"<<j<<"轮结果:";
+        for(auto i:eigval){ 
+            cout<<i<<" ";
+        }
+        cout<<endl;
     }
+    write(qs,lams);
 }
 
 void test2(){
-    vec q(precise);
-    vector<Real> lam;
+    int n=4;
+    string address="./data/train.json";
+    fstream f;
+    f.open(address,ios::out);
+    f<<"["<<endl;
+    int trainnum=1000;
+    for(int j=0;j<trainnum;j++){
+        cout<<"第"<<j<<"轮 ";
+        vector<Real> lam;
 
-    for(int i=0;i<precise;i++){
-        q.insert(i)=0;
+        vector<Real> cof(4);
+        for(int i=0;i<n;i++){
+            cof[i]=(myrand()-0.5)*10;
+        }
+        vector<Real> tmp=CosV(cof);
+        MatrixNumerov(tmp,lam,10);
+
+        f<<"{";
+        f<<" \"cof\":[ ";
+        for(int i=0;i<n-1;i++){
+            f<<setprecision(10)<<cof[i]<<",";
+        }
+        f<<setprecision(10)<<cof[n-1];
+        f<<"],";
+        f<<" \"lambda\":[ ";
+        sort(lam.begin(),lam.end());
+        for(int i=0;i<lam.size()-1;i++){
+            f<<setprecision(10)<<lam[i]<<",";
+        }
+        f<<setprecision(10)<<lam[lam.size()-1];
+        f<<"]";
+        f<<"}";
+        if(j!=trainnum-1){
+            f<<","<<endl;
+        }
+        else{
+            f<<endl;
+        }
+        cout<<endl;
     }
-    for(int i=0;i<20;i++){
-        lam.push_back((i+1)*(i+1)*M_PI*M_PI);
+    f<<"]"<<endl;
+    f.close();
+}
+
+
+void test3(){
+    for(int k=0;k<10;k++){
+        int n=4;
+        string address="./data/test"+to_string(k)+".json";
+        fstream f;
+        f.open(address,ios::out);
+        f<<"["<<endl;
+        int trainnum=100;
+        for(int j=0;j<trainnum;j++){
+            cout<<"第"<<j<<"轮 ";
+            vector<Real> lam;
+            vector<Real> cof(4) ;
+            for(int i=0;i<n;i++){
+                cof[i]=(myrand()-0.5)*10;
+            }
+            vector<Real> tmp=CosV(cof);
+            MatrixNumerov(tmp,lam,10);
+
+            f<<"{";
+            f<<" \"cof\":[ ";
+            for(int i=0;i<n-1;i++){
+                f<<setprecision(10)<<cof[i]<<",";
+            }
+            f<<setprecision(10)<<cof[n-1];
+            f<<"],";
+            f<<" \"lambda\":[ ";
+            sort(lam.begin(),lam.end());
+            for(int i=0;i<lam.size()-1;i++){
+                f<<setprecision(10)<<lam[i]<<",";
+            }
+            f<<setprecision(10)<<lam[lam.size()-1];
+            f<<"]";
+            f<<"}";
+            if(j!=trainnum-1){
+                f<<","<<endl;
+            }
+            else{
+                f<<endl;
+            }
+            cout<<endl;
+        }
+        f<<"]"<<endl;
+        f.close();
     }
-    write(q,lam);
+    
 } 
+
 
 int main()
 {
-    test2();
+    test3();
 }

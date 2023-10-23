@@ -2,7 +2,11 @@
 
 求解
 $$
--y''+q(x)y=l y\\ y(0)=0 , y(1)=0
+-y''+q(x)y=l 
+$$
+
+$$
+y(0)=0 , y(1)=0
 $$
 中的特征值l
 
@@ -71,7 +75,7 @@ void InversePowerMethod(const MatrixXd& M,int x,vector<Real>& result){
 
 ## 成功测试
 
-运行test1()中，我们让q=0，显然$\lambda=(n\pi)^2$
+运行test2()中，我们让q=0，显然$\lambda=(n\pi)^2$
 程序计算结果为
 ```
 迭代:8

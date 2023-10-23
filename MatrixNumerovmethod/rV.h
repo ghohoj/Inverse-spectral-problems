@@ -2,8 +2,8 @@
  * @Description: 生成随机的势能
  * @Author: catgod
  * @Date: 2023-09-05 21:31:55
- * @LastEditTime: 2023-09-06 22:27:45
- * @FilePath: /Inverse spectral problems/gengerate/rV.h
+ * @LastEditTime: 2023-09-15 22:36:16
+ * @FilePath: /Inverse spectral problems/MatrixNumerovmethod/rV.h
  */
 
 #pragma once
@@ -29,14 +29,22 @@ Real PolyCal(vector<Real>& cof,Real x){
 /// @brief 随机返回一个势能，采取的是多项式方式(不需要保证函数一直单调或保证函数为正数)
 /// @param n 多项式最高n-1阶
 /// @return 势能函数，(0,1)之间分为precise份
-vec ployV(int n=4){
-    vec result;
+vector<Real> ployV(int n=4){
+    vector<Real> result(precise);
     vector<Real> cof(n);
     for(int i=0;i<n;i++){
-        cof[i]=random()-0.5;
+        cof[i]=(myrand()-0.5)*20;
     }
     for(int i=0;i<precise;i++){
-        result.insert(i)=PolyCal(cof,i*1.0/precise);
+        result[i]=PolyCal(cof,i*1.0/precise);
+    }
+    return result;
+}
+
+vector<Real> ployV(vector<Real>& cof){
+    vector<Real> result(precise);
+    for(int i=0;i<precise;i++){
+        result[i]=PolyCal(cof,i*1.0/precise);
     }
     return result;
 }
@@ -52,28 +60,33 @@ vector<Real> testV(){
 }
 
 
-Real SinCal(vector<Real>& cof,Real x){
+Real CosCal(vector<Real>& cof,Real x){
     auto s=cof.size();
     Real result=0;
     for(int i=0;i<s;i++){
-        result+=cof[i]*sin(2*M_PI*i*x);
+        result+=cof[i]*cos(2*M_PI*i*x);
     }
     return result;
 }
 
 
 
-vec SinV(int n=4){
-    vec tmp;
+vector<Real> CosV(int n=4){
+    vector<Real> tmp;
     vector<Real> cof(n);
     for(int i=0;i<n;i++){
         cof[i]=random()-0.5;
     }
     for(int i=0;i<precise;i++){
-        tmp.insert(i)=0;
+        tmp[i]=tmp[i]+CosCal(cof,i*1.0/1000);
     }
+    return tmp;
+}
+
+vector<Real> CosV(vector<Real> cof){
+    vector<Real>tmp(precise);
     for(int i=0;i<precise;i++){
-        tmp.coeffRef(i)=tmp.coeffRef(i)+SinCal(cof,i*1.0/1000);
+        tmp[i]=tmp[i]+CosCal(cof,i*1.0/1000);
     }
     return tmp;
 }
