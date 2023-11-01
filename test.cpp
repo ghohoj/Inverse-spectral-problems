@@ -2,7 +2,7 @@
  * @Description: 请加入备注来说明这个文件的意义
  * @Author: catgod
  * @Date: 2023-10-20 18:09:39
- * @LastEditTime: 2023-10-21 21:05:02
+ * @LastEditTime: 2023-10-27 08:56:23
  * @FilePath: /Inverse spectral problems/test.cpp
  */
 /*
@@ -39,22 +39,13 @@
 
 
 void test1(){
-    vector<vector<Real>> qs;
-    vector<vector<Real>> lams;
-    for(int j=0;j<10;j++){
-        vector<Real> v=ployV();
-        vector<Real> eigval;
-        MatrixNumerov(v,eigval,20);
-        qs.push_back(v);
-        lams.push_back(eigval);
-
-        cout<<endl;
-        cout<<"第"<<j<<"轮结果:";
-        for(auto i:eigval){ 
-            cout<<i<<" ";
-        }
-        cout<<endl;
+    vector<Real> qs(precise);
+    vector<Real> lams;
+    for (int i = 0; i < precise; i++)
+    {
+        qs[i]=0;
     }
+    MatrixNumerov(qs,lams,20);
     write(qs,lams);
 }
 
@@ -154,5 +145,5 @@ void test3(){
 
 int main()
 {
-    test3();
+    test1();
 }
